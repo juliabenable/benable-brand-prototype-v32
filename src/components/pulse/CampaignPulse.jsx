@@ -62,7 +62,7 @@ export default function CampaignPulse() {
     const wrap = rootRef.current?.parentElement;
     const column = wrap?.classList.contains('cp-host') ? wrap.parentElement : wrap;
     const pane = column?.parentElement;
-    if (!column || !['Y', 'Z', 'A', 'B'].includes(variant)) return undefined;
+    if (!column || !['Y', 'Z', 'A', 'B', 'C'].includes(variant)) return undefined;
     column.classList.add('cp-crew-mode--labs');
     pane?.classList.add('cp-labs-pane');
     return () => {
@@ -82,9 +82,9 @@ export default function CampaignPulse() {
   }, []);
 
   const banner = CREW_BANNERS[scene.day];
-  const callMode = ['X', 'P', 'Q', 'R', 'S', 'T', 'U', 'Y', 'Z', 'A', 'B'].includes(variant) || !!BAR[variant];
+  const callMode = ['X', 'P', 'Q', 'R', 'S', 'T', 'U', 'Y', 'Z', 'A', 'B', 'C'].includes(variant) || !!BAR[variant];
   const crewRows = (CREW[scene.day] || []).filter((c) => {
-    if (!['Q', 'S', 'T', 'U', 'Y', 'Z', 'A', 'B'].includes(variant) || stageFilter == null) return true;
+    if (!['Q', 'S', 'T', 'U', 'Y', 'Z', 'A', 'B', 'C'].includes(variant) || stageFilter == null) return true;
     if (stageFilter === 'casting') return !!c.mystery;
     if (stageFilter === 'needs') return !c.mystery && (!!c.action || scene.day === 3);
     return !c.mystery && stageOf(c, scene.day) === stageFilter;
@@ -104,12 +104,12 @@ export default function CampaignPulse() {
       {variant === 'U' && <PipelineSlabBar scene={scene} filter={stageFilter} onFilter={setStageFilter} palette="green" seeall />}
       {variant === 'Y' && <PipelineSlabBar scene={scene} filter={stageFilter} onFilter={setStageFilter} palette="green" seeall />}
       {variant === 'Z' && <PipelineGradientBar scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
-      {variant === 'A' && <AmineProgress scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
+      {['A', 'C'].includes(variant) && <AmineProgress scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
       {variant === 'B' && <AmineProgress2 scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
       <div className="cp-crew2" key={`b-${variant}-${scene.day}`}>
         <div className="cp-crew-cols cp-crew-cols--left">
           <div className="cp-crew-left">
-            {banner && (
+            {banner && variant !== 'C' && (
               <div className={`cp-crew-banner cp-crew-banner--${banner.tone}`}>
                 <span className="cp-crew-banner-dot" />
                 <span className="cp-crew-banner-text">{banner.text}</span>
@@ -127,7 +127,7 @@ export default function CampaignPulse() {
                 </div>
               </div>
             )}
-            {['A', 'B'].includes(variant) ? (
+            {['A', 'B', 'C'].includes(variant) ? (
               <AmineTable
                 scene={scene}
                 rows={crewRows}
@@ -215,7 +215,7 @@ export default function CampaignPulse() {
           </div>
 
           <aside className="cp-tile-stack cp-tile-stack--gray">
-            {['A', 'B'].includes(variant) ? (
+            {['A', 'B', 'C'].includes(variant) ? (
               <AmineRail scene={scene} />
             ) : ['Y', 'Z'].includes(variant) ? (
               <>
