@@ -2,6 +2,7 @@
    Full A–W variant history is archived in benable-brand-prototype-v27. */
 
 export const VARIANTS = [
+  { key: 'A', name: 'Amine' },
   { key: 'V', name: 'Gray + crew' },
   { key: 'W', name: 'Live bar' },
   { key: 'X', name: 'Call fixes' },
