@@ -1,25 +1,14 @@
 /* Campaign Pulse data — all demo content lives here.
    Full A–W variant history is archived in benable-brand-prototype-v27. */
 
+/* Pruned lineup (Julia, Jul 27) — the full letter history lives in git/v31. */
 export const VARIANTS = [
   { key: 'A', name: 'Amine' },
-  { key: 'B', name: 'Amine rail' },
   { key: 'C', name: 'No banner' },
-  { key: 'V', name: 'Gray + crew' },
   { key: 'W', name: 'Live bar' },
-  { key: 'X', name: 'Call fixes' },
-  { key: 'P', name: 'Pipeline' },
-  { key: 'Q', name: 'Filter bar' },
-  { key: 'R', name: 'Fixed stages' },
-  { key: 'S', name: 'P + filters' },
-  { key: 'T', name: 'Slabs' },
-  { key: 'U', name: 'Green ramp' },
   { key: 'Y', name: 'Labs skin' },
   { key: 'Z', name: 'Gradient bar' },
   { key: '0', name: 'Band' },
-  { key: '6', name: 'Synthesis' },
-  { key: '7', name: 'Faces bar' },
-  { key: '13', name: 'Vitals' },
 ];
 
 export const STAGE_LABELS = ['Invited', 'Confirmed', 'Product', 'Filming', 'Submitted', 'Live'];

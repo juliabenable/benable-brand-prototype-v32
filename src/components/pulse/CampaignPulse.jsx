@@ -29,7 +29,7 @@ let persistedVariant = 'A';
 export default function CampaignPulse() {
   const [idx, setIdx] = useState(persistedIdx);
   const [variant, setVariant] = useState(
-    VARIANTS.some((v) => v.key === persistedVariant) ? persistedVariant : 'V',
+    VARIANTS.some((v) => v.key === persistedVariant) ? persistedVariant : 'A',
   );
   const [openCrew, setOpenCrew] = useState(() => new Set());
   const [stageFilter, setStageFilter] = useState(null);
