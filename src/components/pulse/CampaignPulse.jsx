@@ -104,8 +104,8 @@ export default function CampaignPulse() {
       {variant === 'U' && <PipelineSlabBar scene={scene} filter={stageFilter} onFilter={setStageFilter} palette="green" seeall />}
       {variant === 'Y' && <PipelineSlabBar scene={scene} filter={stageFilter} onFilter={setStageFilter} palette="green" seeall />}
       {variant === 'Z' && <PipelineGradientBar scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
-      {['A', 'C'].includes(variant) && <AmineProgress scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
-      {variant === 'B' && <AmineProgress2 scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
+      {variant === 'A' && <AmineProgress scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
+      {['B', 'C'].includes(variant) && <AmineProgress2 scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
       <div className="cp-crew2" key={`b-${variant}-${scene.day}`}>
         <div className="cp-crew-cols cp-crew-cols--left">
           <div className="cp-crew-left">
