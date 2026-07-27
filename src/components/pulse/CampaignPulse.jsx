@@ -9,7 +9,7 @@ import { Lead, RecapTile, UpNextTile, PaceTile, LiveBarTile } from './tiles.jsx'
 import CrewBar from './crewBar.jsx';
 import PipelineBar, { PipelineFilterBar, PipelineFixedBar, PipelineMashBar, PipelineSlabBar, PipelineGradientBar, stageOf } from './pipelineBar.jsx';
 import { LabsCrew, LabsRecap, LabsUpNext, LabsPace } from './labs.jsx';
-import { AmineProgress, AmineTable, AmineRail } from './amine.jsx';
+import { AmineProgress, AmineProgress2, AmineTable, AmineRail } from './amine.jsx';
 
 const BAR = { 0: 'band', 6: 'synth', 7: 'faces', 13: 'vitals' };
 
@@ -62,7 +62,7 @@ export default function CampaignPulse() {
     const wrap = rootRef.current?.parentElement;
     const column = wrap?.classList.contains('cp-host') ? wrap.parentElement : wrap;
     const pane = column?.parentElement;
-    if (!column || !['Y', 'Z', 'A'].includes(variant)) return undefined;
+    if (!column || !['Y', 'Z', 'A', 'B'].includes(variant)) return undefined;
     column.classList.add('cp-crew-mode--labs');
     pane?.classList.add('cp-labs-pane');
     return () => {
@@ -82,9 +82,9 @@ export default function CampaignPulse() {
   }, []);
 
   const banner = CREW_BANNERS[scene.day];
-  const callMode = ['X', 'P', 'Q', 'R', 'S', 'T', 'U', 'Y', 'Z', 'A'].includes(variant) || !!BAR[variant];
+  const callMode = ['X', 'P', 'Q', 'R', 'S', 'T', 'U', 'Y', 'Z', 'A', 'B'].includes(variant) || !!BAR[variant];
   const crewRows = (CREW[scene.day] || []).filter((c) => {
-    if (!['Q', 'S', 'T', 'U', 'Y', 'Z', 'A'].includes(variant) || stageFilter == null) return true;
+    if (!['Q', 'S', 'T', 'U', 'Y', 'Z', 'A', 'B'].includes(variant) || stageFilter == null) return true;
     if (stageFilter === 'casting') return !!c.mystery;
     if (stageFilter === 'needs') return !c.mystery && (!!c.action || scene.day === 3);
     return !c.mystery && stageOf(c, scene.day) === stageFilter;
@@ -105,6 +105,7 @@ export default function CampaignPulse() {
       {variant === 'Y' && <PipelineSlabBar scene={scene} filter={stageFilter} onFilter={setStageFilter} palette="green" seeall />}
       {variant === 'Z' && <PipelineGradientBar scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
       {variant === 'A' && <AmineProgress scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
+      {variant === 'B' && <AmineProgress2 scene={scene} filter={stageFilter} onFilter={setStageFilter} />}
       <div className="cp-crew2" key={`b-${variant}-${scene.day}`}>
         <div className="cp-crew-cols cp-crew-cols--left">
           <div className="cp-crew-left">
@@ -126,7 +127,7 @@ export default function CampaignPulse() {
                 </div>
               </div>
             )}
-            {variant === 'A' ? (
+            {['A', 'B'].includes(variant) ? (
               <AmineTable
                 scene={scene}
                 rows={crewRows}
@@ -214,7 +215,7 @@ export default function CampaignPulse() {
           </div>
 
           <aside className="cp-tile-stack cp-tile-stack--gray">
-            {variant === 'A' ? (
+            {['A', 'B'].includes(variant) ? (
               <AmineRail scene={scene} />
             ) : ['Y', 'Z'].includes(variant) ? (
               <>

@@ -3,6 +3,7 @@
 
 export const VARIANTS = [
   { key: 'A', name: 'Amine' },
+  { key: 'B', name: 'Amine rail' },
   { key: 'V', name: 'Gray + crew' },
   { key: 'W', name: 'Live bar' },
   { key: 'X', name: 'Call fixes' },

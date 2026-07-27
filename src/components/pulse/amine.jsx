@@ -241,6 +241,122 @@ export function AmineProgress({ scene, filter, onFilter }) {
   );
 }
 
+/* ---- V2 · the stage rail (Figma 11638:139353) --------------------------
+   Equal-width columns carry the reading in the label + hint underneath, so
+   there is no chip row; the amber badge is a button and does what V1's
+   "Needs you" chip does. Fills are his V2 ramp (two moved for contrast,
+   see his NOTES §7); hints are the frame's copy verbatim. The frame's
+   leading "Casting…" column (#dbeee3) — which he dropped for lack of a
+   casting state — comes back here, since v32 has one. */
+const AM2_RAIL = [
+  { fill: '#b9dfcb', ink: '#06301f', hint: () => 'invites go out on approval' },
+  { fill: '#8fceae', ink: '#06301f', hint: (n) => (n ? `${n} placing orders now` : 'waiting on replies') },
+  { fill: '#5fb98c', ink: '#06301f', hint: (n) => (n ? `${n} ${n === 1 ? 'shipment' : 'shipments'} in transit` : 'nothing in transit') },
+  { fill: '#30aa70', ink: '#06301f', hint: () => 'once packages land' },
+  { fill: '#17864f', ink: '#ffffff', hint: () => 'after filming' },
+  { fill: '#1a6f4c', ink: '#ffffff', hint: () => 'after our checks' },
+  { fill: '#124a33', ink: '#ffffff', hint: () => 'after posts go live' },
+];
+
+function RailColumn({ label, hint, count, fill, hatchClass, ink, radius, disabled, selected, dimmed, highlighted, badge, onActivate, onBadge, tip }) {
+  return (
+    <div className={`am2-col${dimmed ? ' am-dim' : ''}`}>
+      <button
+        type="button"
+        disabled={disabled}
+        aria-pressed={disabled ? undefined : selected}
+        className={`am2-bar${hatchClass ? ` ${hatchClass}` : ''}${selected ? ' am-seg--active' : ''}${highlighted ? ' am-seg--glow' : ''}`}
+        style={{ background: fill, borderRadius: `${radius.left}px ${radius.right}px ${radius.right}px ${radius.left}px` }}
+        onClick={disabled ? undefined : onActivate}
+      >
+        <span className="am2-count" style={{ color: ink }}>{count}</span>
+        {tip}
+      </button>
+      {badge > 0 && (
+        <button
+          type="button"
+          className="am-badge am2-badge"
+          aria-label={`${badge} ${badge === 1 ? 'creator needs' : 'creators need'} you in ${label}`}
+          onClick={onBadge}
+        >
+          {badge}
+        </button>
+      )}
+      <div className="am2-leg">
+        <p className="am2-label">{label}</p>
+        <p className="am2-hint">{hint}</p>
+      </div>
+    </div>
+  );
+}
+
+export function AmineRailBar({ scene, filter, onFilter }) {
+  const f = amFunnel(scene);
+  const total = f.rows.length || 1;
+  const filtering = filter != null;
+  const last = AM_STAGES.length - 1;
+
+  return (
+    <div className="am2-rail" role="group" aria-label={`Creator funnel: ${PCT[scene.day]} through`}>
+      {f.casting > 0 && (
+        <RailColumn
+          label="Casting…"
+          hint={`${f.casting} being cast now`}
+          count={f.casting}
+          fill="#dbeee3"
+          ink="#06301f"
+          radius={{ left: 74, right: 4 }}
+          selected={filter === 'casting'}
+          dimmed={filtering && filter !== 'casting'}
+          onActivate={() => onFilter(filter === 'casting' ? null : 'casting')}
+          tip={<Tip title="Casting…" summary={`${f.casting} of ${total} here · being cast right now`} />}
+        />
+      )}
+      {AM_STAGES.map((s, i) => {
+        const n = f.counts[i];
+        const empty = n === 0;
+        const active = filter === i;
+        const rail = AM2_RAIL[i];
+        return (
+          <RailColumn
+            key={s.label}
+            label={s.label}
+            hint={rail.hint(n, f.named.length)}
+            count={n}
+            fill={empty ? undefined : rail.fill}
+            hatchClass={empty ? 'am-seg--sliver' : ''}
+            ink={empty ? '#808080' : rail.ink}
+            radius={{ left: i === 0 && f.casting === 0 ? 74 : 4, right: i === last ? 100 : 4 }}
+            disabled={empty}
+            selected={active}
+            dimmed={filtering && !active && !(filter === 'needs' && f.needs[i] > 0)}
+            highlighted={filter === 'needs' && f.needs[i] > 0}
+            badge={f.needs[i]}
+            onActivate={() => onFilter(active ? null : i)}
+            onBadge={() => onFilter(filter === 'needs' ? null : 'needs')}
+            tip={!empty && (
+              <Tip
+                title={s.label}
+                summary={`${n} of ${f.named.length} here · ${Math.round((f.reached(i) / (f.named.length || 1)) * 100)}% reached this stage or beyond`}
+                rows={f.who[i]}
+              />
+            )}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+export function AmineProgress2({ scene, filter, onFilter }) {
+  return (
+    <div className="am-progress">
+      <AmineStat scene={scene} />
+      <AmineRailBar scene={scene} filter={filter} onFilter={onFilter} />
+    </div>
+  );
+}
+
 /* ---- creators table ---------------------------------------------------- */
 export const AM_FILTER_LABEL = (filter) =>
   filter === 'needs' ? 'Needs you' : filter === 'casting' ? 'Casting…' : AM_STAGES[filter]?.label;
