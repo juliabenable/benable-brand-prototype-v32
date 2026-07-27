@@ -81,7 +81,7 @@ export function AmineStat({ scene }) {
     <div className="am-stat">
       <div className="am-stat-left">
         <span className="am-stat-big">{PCT[scene.day]}</span>
-        <span className="am-stat-cap">through</span>
+        <span className="am-stat-cap">complete</span>
       </div>
       <div className="am-stat-note">
         <span aria-hidden>{emoji}</span>
